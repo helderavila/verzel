@@ -1,6 +1,7 @@
 import produce from 'immer'
 
 const INITIAL_STATE = {
+  signed: false,
   user: {
     name: {
       first: '...',

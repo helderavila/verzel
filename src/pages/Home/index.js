@@ -20,11 +20,11 @@ const schema = yup.object().shape({
   name: yup.string().required('Nome é obrigatório'),
   email: yup.string().required('Email é obrigatório'),
   password: yup.string().required('Senha é obrigatória'),
-  cpf: yup.string().required('CPF é obrigatório'),
   birthDate: yup.string().required('Data de nascimento é obrigatória'),
-  zipCode: yup.string().required('CEP é obrigatório'),
-  number: yup.string().required('Número é obrigatório'),
-  address: yup.string().required('Endereço é obrigatório'),
+  cpf: yup.string(),
+  zipCode: yup.string(),
+  number: yup.string(),
+  address: yup.string(),
 });
 
 export function Home() {
@@ -40,38 +40,39 @@ export function Home() {
   } = useForm({
     resolver: yupResolver(schema)
   });
+  document.title = 'Início | Todo'
 
-  const data = watch()
+  // const data = watch()
 
   console.log(errors)
 
   const [searchCepLoading, setSearchCepLoading] = useState(false)
 
-  useEffect(() => {
-    console.log(data.zipCode)
-      if (data.zipCode) {
-        const filteredCep = data.zipCode.replace(/[^a-zA-Z0-9]/g, "",)
-        if (filteredCep.length === 8) {
-          setSearchCepLoading(true)
-          axios.get(`https://viacep.com.br/ws/${filteredCep}/json/`).then(response => {
-            if (!response.data.erro) {
-              setValue('address', response.data.logradouro)
-              setSearchCepLoading(false)
-              clearError('cep')
-            } else {
-              setSearchCepLoading(false)
-              setError('cep', {
-                type: "manual",
-                message: 'CEP não encontrado!'
-              })
-              setValue('address', '')
-            }
-          }).catch(error => {
-            setSearchCepLoading(false)
-          })
-        }
-      }
-  }, [data.zipCode])
+  // useEffect(() => {
+  //   console.log(data.zipCode)
+  //     if (data.zipCode) {
+  //       const filteredCep = data.zipCode.replace(/[^a-zA-Z0-9]/g, "",)
+  //       if (filteredCep.length === 8) {
+  //         setSearchCepLoading(true)
+  //         axios.get(`https://viacep.com.br/ws/${filteredCep}/json/`).then(response => {
+  //           if (!response.data.erro) {
+  //             setValue('address', response.data.logradouro)
+  //             setSearchCepLoading(false)
+  //             clearError('cep')
+  //           } else {
+  //             setSearchCepLoading(false)
+  //             setError('cep', {
+  //               type: "manual",
+  //               message: 'CEP não encontrado!'
+  //             })
+  //             setValue('address', '')
+  //           }
+  //         }).catch(error => {
+  //           setSearchCepLoading(false)
+  //         })
+  //       }
+  //     }
+  // }, [data.zipCode])
 
   const onSubmit = data => console.log(data);
   return (
@@ -107,6 +108,14 @@ export function Home() {
             error={errors.password?.message}
             register={register("password")}
           />
+            <Input 
+              name="birthDate"
+              label="Data de aniversário"
+              placeholder="Data de aniversário"
+              type="date"
+              error={errors.birthDate?.message}
+              register={register("birthDate")}
+             />
           <Input 
               label="CPF"
               error={errors.cpf?.message}
@@ -120,14 +129,6 @@ export function Home() {
                 />
               }
             />
-          <Input 
-            name="birthDate"
-            label="Data de aniversário"
-            placeholder="Data de aniversário"
-            type="date"
-            error={errors.birthDate?.message}
-            register={register("birthDate")}
-          />
           <div className={styles.formWrapper}>
           <Input 
               label="CEP"
