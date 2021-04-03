@@ -1,5 +1,14 @@
 import styles from './styles.module.scss'
 
+import { SignInButton } from '../SignInButton'
+
 export function Header() {
-  return <h1 className={styles.title}>Header</h1>
+  return (
+    <header className={styles.headerContainer}>
+      <div className={styles.headerContent}>
+        <h1>todo<span>.</span></h1>
+        <SignInButton />
+      </div>
+    </header>
+  )
 }
